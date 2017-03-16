@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Check args
+if [ $# -eq 1 ]
+  then
+
+  if [ -s /usr/local/pakScripts/$1 ]
+  then
+    while true; do
+      read -p "Do you wish to remove pak: $1? (y/n): " yn
+      case $yn in
+          [Yy]* ) rm -rf /usr/local/pakScripts/$1; break;;
+          [Nn]* ) exit;;
+          * ) echo "Please answer yes or no.";;
+      esac
+    done
+  else
+
+    echo "pak | error > pak doesn't exist"
+  fi
+else
+  echo "pak | error > enter pak name"
+fi

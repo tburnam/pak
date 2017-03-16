@@ -12,6 +12,7 @@ then
    mkdir /usr/local/pakScripts
    chmod 777 /usr/local/pakScripts
    cp ./pak /usr/local/bin
+   cp ./unpak /usr/local/bin
    echo "packBuild | pak installed successfully"
 else
      echo "pakBuild | error > pak file missing"

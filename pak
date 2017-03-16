@@ -15,6 +15,7 @@ if [ $# -eq 1 ]
     #    exit 1
     # fi
 
+
     touch /usr/local/pakScripts/$1
     echo '#!/bin/bash' >> /usr/local/pakScripts/$1
     echo "# ---- pak builder" >> /usr/local/pakScripts/$1
