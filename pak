@@ -23,7 +23,8 @@ if [ $# -eq 1 ]
     echo "" >> /usr/local/pakScripts/$1
     echo "echo hello, $1!" >> /usr/local/pakScripts/$1
     chmod +x /usr/local/pakScripts/$1
-    atom /usr/local/pakScripts/$1:4
+    cp /usr/local/pakScripts/$1 /usr/local/bin/
+    atom /usr/local/bin/$1:4
   fi
 else
   echo "pak | error > enter script name"
