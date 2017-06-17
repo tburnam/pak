@@ -1,12 +1,46 @@
 #!/bin/bash
 
-# Check args
-if [ $# -eq 1 ]
-  then
 
-  if [ -s /usr/local/pakScripts/$1 ]
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# pak dev style guide
+#
+# Developer Experience - your code should be a narrative that any curious
+#                        developer can reasonably understand. Clear code
+#                        is good code. Clarity is defined by a mixure of
+#                        code intuitioin and comment structure. Therefore,
+#                        comments should be used when code intuition is
+#                        low, and can be omitted when it is high.
+#
+# User Experience - pak UX must always be simple and intuitive - but that
+#                   does not mean that the underlying implementations must
+#                   be simple. UX should remain as fluid and intuitive as
+#                   possible. As pak changes, so will the UX, but these
+#                   changes should be an extension of what pak is at the
+#                   time, not an addition to it. pak is a productivity
+#                   tool and so simplicity is always king
+#
+#
+# Freedom - pak is a community-driven project. Feel free to move the project
+#           forward in your own, or shared vision. PRs are always welcome,
+#           and any feature that implements the general guidelines above will
+#           be accepted. Let's make pak ours
+#
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# PAK driver script
+
+# Setup
+optFlag=0
+
+# Utility methods
+usageError() { echo "📦: 🔥  Usage: [-b <new pak name>] [-r <pak to remove>] <pak to run> 🔥" 1>&2; exit 1; }
+
+createPak()
+{
+  PAK_NAME=$optFlag
+  if [ -s /usr/local/pakScripts/$PAK_NAME ]
   then
-     echo "pak | error > $1 already exists"
+     echo "📦: $PAK_NAME already exists"
   else
 
     # # Check if admin (comment out if you want to disable)
@@ -15,17 +49,123 @@ if [ $# -eq 1 ]
     #    exit 1
     # fi
 
+    # Create pak file
+    touch /usr/local/pakScripts/$PAK_NAME
 
-    touch /usr/local/pakScripts/$1
-    echo '#!/bin/bash' >> /usr/local/pakScripts/$1
-    echo "# ---- pak builder" >> /usr/local/pakScripts/$1
-    echo "# ---- by tyler burnam" >> /usr/local/pakScripts/$1
-    echo "" >> /usr/local/pakScripts/$1
-    echo "echo hello, $1!" >> /usr/local/pakScripts/$1
-    chmod +x /usr/local/pakScripts/$1
-    cp /usr/local/pakScripts/$1 /usr/local/bin/
-    atom /usr/local/bin/$1:4
+    # Load header data into pak file
+    echo '#!/bin/bash' >> /usr/local/pakScripts/$PAK_NAME
+    echo "# ---- pak builder" >> /usr/local/pakScripts/$PAK_NAME
+    echo "# ---- by tyler burnam" >> /usr/local/pakScripts/$PAK_NAME
+    echo "" >> /usr/local/pakScripts/$PAK_NAME
+    echo "echo hello, $PAK_NAME!" >> /usr/local/pakScripts/$PAK_NAME
+
+    # Make pak file executable
+    chmod +x /usr/local/pakScripts/$PAK_NAME
+
+    # User output
+    echo "📦: pak file created"
+
+    # Prompt if the user would like to open in Atom
+    echo -n "Would you like to open it in Atom? [y/n] "
+    read answer
+    if echo "$answer" | grep -iq "^y" ;then
+        atom /usr/local/pakScripts/$PAK_NAME:4
+    else
+        echo "📦:🚀"
+    fi
   fi
-else
-  echo "pak | error > enter script name"
+}
+
+# Only supports single delete
+deletePak()
+{
+  PAK_NAME=$optFlag
+  if [ -s /usr/local/pakScripts/$PAK_NAME ]
+  then
+     rm /usr/local/pakScripts/$PAK_NAME
+     echo "📦: Successfully removed $PAK_NAME"
+  fi
+}
+
+listPaks()
+{
+  echo
+  echo "📦: Your paks"
+  echo "---------------"
+  ls -1 /usr/local/pakScripts/
+  echo "---------------"
+  echo
+}
+
+openPak()
+{
+  PAK_NAME=$optFlag
+  if [ -s /usr/local/pakScripts/$PAK_NAME ]
+  then
+     vi -c "syntax on" /usr/local/pakScripts/$PAK_NAME
+  fi
+}
+
+pakHelp()
+{
+  echo
+  echo "📦: pak | the command-line tool for everything"
+  echo
+  echo "pak               | lists your paks"
+  echo "pak -b <pak name> | builds a new pak and puts it in your path"
+  echo "pak -r <pak name> | removes a pak"
+  echo "pak -o <pak name> | opens an existing pak in vim"
+  echo "pak -l            | lists your paks"
+  echo "pak -h            | pak help page"
+  echo
+}
+
+# Control flow
+
+# Routes [-b build], [-r remove], [-o open], [-l list] arguments
+while getopts ":b:r:o:hl" o; do
+    case "${o}" in
+        b)
+            optFlag=${OPTARG}
+            createPak
+            ;;
+        r)
+            optFlag=${OPTARG}
+            deletePak
+            ;;
+        o)
+            optFlag=${OPTARG}
+            openPak
+            ;;
+        h)
+            optFlag=${OPTARG}
+            pakHelp
+            ;;
+        l)
+            optFlag=${OPTARG}
+            listPaks
+            ;;
+        *)
+            usageError
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+# If no input `pak` just list all active paks
+if [ $# -eq 0 ] && [ "$optFlag" == 0 ]
+  then
+    pakHelp
+    exit 0
+fi
+
+# If a single argument is given, run it
+if [ $# -eq 1 ]
+  then
+  if [ -s /usr/local/pakScripts/$1 ]
+  then
+    /usr/local/pakScripts/./$1
+  else
+    echo "📦: 🔥 That pak doesn't exist, consider -i installing it 🔥"
+  fi
 fi

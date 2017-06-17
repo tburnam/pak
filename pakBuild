@@ -2,17 +2,18 @@
 # ---- pak script builder
 # ---- by tyler burnam
 
-
+# Check if user is root user
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
+
+# Check if there is a pak file
 if [ -s ./pak ]
 then
    mkdir /usr/local/pakScripts
    chmod 777 /usr/local/pakScripts
    cp ./pak /usr/local/bin
-   cp ./unpak /usr/local/bin
    echo "packBuild | pak installed successfully"
 else
      echo "pakBuild | error > pak file missing"
