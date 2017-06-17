@@ -6,7 +6,7 @@
 <br>
 
 ## Purpose
-pak is a way of organizing paks, or executable scripts. Using pak, you can create, modify, and share scripts that perform various tasks. paks can trigger complex build scripts, and work is being done to provide an API to various languages to supercharge building paks.
+pak is a way of organizing paks, or executable scripts. Using pak, you can create, modify, and share scripts that perform various tasks. paks can trigger complex build scripts, and work is being done to provide an API to various languages to supercharge building paks. I have been developing pak for several months and have used it extensively in personal projects - it's very helpful for complex projects.
 
 ## Install instructions
 ```bash
