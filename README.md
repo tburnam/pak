@@ -14,10 +14,13 @@ pak is a way of organizing paks, or executable scripts. Using pak, you can creat
 `sudo ./pakBuild`
 
 ## Usage
-`pak [command name]`
-<br>
-where command name is the name of a new bash script
-
-
+```
+pak               | lists your paks
+pak -b <pak name> | builds a new pak and puts it in your path
+pak -r <pak name> | removes a pak
+pak -o <pak name> | opens an existing pak in vim
+pak -l            | lists your paks
+pak -h            | pak help page
+```
 
 ## PRs welcome!
