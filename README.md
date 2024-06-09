@@ -1,5 +1,5 @@
 <h1 align="center">pak</h1>
-<h4 align="center">Command line tool for everything</h4>
+<h4 align="center">Command line tool for managing custom scripts</h4>
 <p align="center"> 
 <img src="https://github.com/tburnam/pak/blob/master/usage.gif">
 </p>
